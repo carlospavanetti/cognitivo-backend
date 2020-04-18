@@ -1,12 +1,18 @@
 import os
-from twitter import Twitter, OAuth
+from dotenv import load_dotenv
+from tweepy import API, AppAuthHandler
 
 
 def client():
-    CONSUMER_KEY = os.environ['TWITTER_CONSUMER_KEY']
-    CONSUMER_SECRET = os.environ['TWITTER_CONSUMER_SECRET']
-    ACCESS_TOKEN = os.environ['TWITTER_ACCESS_TOKEN']
-    ACCESS_SECRET = os.environ['TWITTER_ACCESS_SECRET']
+    load_dotenv()
+    ACCESS_TOKEN = os.environ['TWITTER_CONSUMER_KEY']
+    ACCESS_SECRET = os.environ['TWITTER_CONSUMER_SECRET']
 
-    return Twitter(
-        auth=OAuth(ACCESS_TOKEN, ACCESS_SECRET, CONSUMER_KEY, CONSUMER_SECRET))
+    api = API(
+        AppAuthHandler(ACCESS_TOKEN, ACCESS_SECRET),
+        wait_on_rate_limit=True,
+        wait_on_rate_limit_notify=True)
+
+    if not api:
+        raise Exception('Could not authenticate')
+    return api
