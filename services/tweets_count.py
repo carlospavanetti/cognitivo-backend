@@ -2,9 +2,9 @@ from services.twitter import client
 
 
 class TweetsCount():
-    def __init__(self, query):
+    def __init__(self, query, api=client()):
         self._query = query
-        self._api = client()
+        self._api = api
 
     def value(self):
         count = 0
@@ -27,7 +27,8 @@ def preprocessed_name(name):
 
 
 def with_tweets_citations_count(frame):
-    citations = [TweetsCount(preprocessed_name(row.track_name)).value()
-                 for _, row in frame.iterrows()]
-    enriched = frame.assign(n_citacoes=citations)
+    api = client()
+    count = [TweetsCount(preprocessed_name(row.track_name), api=api).value()
+             for _, row in frame.iterrows()]
+    enriched = frame.assign(n_citacoes=count)
     return enriched
