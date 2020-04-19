@@ -11,7 +11,8 @@ def client():
     api = API(
         AppAuthHandler(ACCESS_TOKEN, ACCESS_SECRET),
         wait_on_rate_limit=True,
-        wait_on_rate_limit_notify=True)
+        wait_on_rate_limit_notify=True,
+        retry_count=5, retry_delay=10)
 
     if not api:
         raise Exception('Could not authenticate')
