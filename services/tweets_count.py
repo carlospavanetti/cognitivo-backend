@@ -8,7 +8,15 @@ class TweetsCount():
 
     def value(self):
         queries = [self.__limited_name(), self.__app_suffixed()]
-        return sum([self.__count(query) for query in queries])
+        return self.__unique_tweets_count(
+            [self.__tweets(query) for query in queries])
+
+    def __unique_tweets_count(self, array):
+        tweet_ids = set()
+        for chunk in array:
+            for tweet in chunk:
+                tweet_ids.add(tweet.id)
+        return len(tweet_ids)
 
     def __limited_name(self, word_count=4):
         return ' '.join(self._query.split()[:word_count])
@@ -16,15 +24,15 @@ class TweetsCount():
     def __app_suffixed(self):
         return self.__limited_name(2) + ' app'
 
-    def __count(self, query):
-        count, max_id = self.__partial(query)
+    def __tweets(self, query):
+        tweets, max_id = self.__partial(query)
         while max_id:
-            delta, max_id = self.__partial(query, max_id=max_id)
-            count += delta
-        return count
+            news, max_id = self.__partial(query, max_id=max_id)
+            tweets += news
+        return tweets
 
     def __partial(self, query, max_id=None):
-        count = 0
+        tweets = []
         try:
             while True:
                 new_tweets = self._api.search(
@@ -32,12 +40,12 @@ class TweetsCount():
 
                 if not new_tweets:
                     break
-                count += len(new_tweets)
+                tweets += new_tweets
                 max_id = new_tweets[-1].id - 1
-            return [count, None]
+            return [tweets, None]
         except ApiError:
             print('Timeout exception')
-            return [count, max_id]
+            return [tweets, max_id]
 
 
 def with_tweets_citations_count(frame):
