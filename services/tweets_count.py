@@ -7,9 +7,13 @@ class TweetsCount():
         self._api = api or client()
 
     def value(self):
-        count, max_id = self.__partial(self._query)
+        queries = [self._query]
+        return sum([self.__count(query) for query in queries])
+
+    def __count(self, query):
+        count, max_id = self.__partial(query)
         while max_id:
-            delta, max_id = self.__partial(self._query, max_id=max_id)
+            delta, max_id = self.__partial(query, max_id=max_id)
             count += delta
         return count
 
