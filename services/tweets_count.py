@@ -18,3 +18,16 @@ class TweetsCount():
             count += len(new_tweets)
             max_id = new_tweets[-1].id - 1
         return count
+
+
+def preprocessed_name(name):
+    # clean_name = re.sub(r'(-|–|&|,|!|and|by)', '', name)
+    limited_name = ' '.join(name.split()[:4])
+    return limited_name
+
+
+def with_tweets_citations_count(frame):
+    citations = [TweetsCount(preprocessed_name(row.track_name)).value()
+                 for _, row in frame.iterrows()]
+    enriched = frame.assign(n_citacoes=citations)
+    return enriched

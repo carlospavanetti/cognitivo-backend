@@ -1,7 +1,7 @@
 from time import time
 import pandas as pd
 from services import database
-from services.tweets_count import TweetsCount
+from services.tweets_count import with_tweets_citations_count
 
 
 def most_rated(frame, n=1):
@@ -15,25 +15,6 @@ def top_book_and_music_apps(frame):
     top_book = most_rated(book_apps, 10)
     top_music = most_rated(music_apps, 10)
     return pd.concat([top_book, top_music])
-
-
-def preprocessed_name(name):
-    # clean_name = re.sub(r'(-|–|&|,|!|and|by)', '', name)
-    limited_name = ' '.join(name.split()[:4])
-    return limited_name
-
-
-def tweets_citations(query, id=0):
-    if id == 82:
-        return TweetsCount(query).value()
-    return 0
-
-
-def with_tweets_citations_count(frame):
-    citations = [tweets_citations(preprocessed_name(
-        app.track_name), i) for i, app in frame.iterrows()]
-    frame['n_citacoes'] = citations
-    return frame
 
 
 data = pd.read_csv('data/AppleStore.csv')
