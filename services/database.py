@@ -4,5 +4,5 @@ engine = create_engine('sqlite:///output/database.db')
 
 
 def save_dataframe(frame, table, timestamp):
-    frame['saved_at'] = [timestamp] * len(frame.index)
-    frame.to_sql(table, con=engine, if_exists='append')
+    with_saved_at = frame.assign(saved_at=[timestamp] * len(frame.index))
+    with_saved_at.to_sql(table, con=engine, if_exists='append')
