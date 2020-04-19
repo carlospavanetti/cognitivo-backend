@@ -1,5 +1,6 @@
 from time import time
 import pandas as pd
+from services import database
 from services.tweets_count import TweetsCount
 
 
@@ -48,3 +49,4 @@ timestamp = int(time())
 filename = '{timestamp}_output'.format(timestamp=timestamp)
 output_data.to_csv('{name}.csv'.format(name=filename), index=False)
 output_data.to_json('{name}.json'.format(name=filename), orient='records')
+database.save_dataframe(output_data, 'top_rated_apps', timestamp)
