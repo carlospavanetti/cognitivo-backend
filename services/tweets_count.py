@@ -2,9 +2,9 @@ from services.twitter import client
 
 
 class TweetsCount():
-    def __init__(self, query, api=client()):
+    def __init__(self, query, api=None):
         self._query = query
-        self._api = api
+        self._api = api or client()
 
     def value(self):
         count = 0
