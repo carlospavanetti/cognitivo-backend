@@ -47,6 +47,7 @@ output_data = enriched_data[
 
 timestamp = int(time())
 filename = '{timestamp}_output'.format(timestamp=timestamp)
-output_data.to_csv('{name}.csv'.format(name=filename), index=False)
-output_data.to_json('{name}.json'.format(name=filename), orient='records')
+output_data.to_csv('output/{name}.csv'.format(name=filename), index=False)
+output_data.to_json('output/{name}.json'.format(name=filename),
+                    orient='records')
 database.save_dataframe(output_data, 'top_rated_apps', timestamp)

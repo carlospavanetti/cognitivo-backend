@@ -2,3 +2,4 @@ backend-test/
 .vscode/
 .env
 *.pyc
+output/
