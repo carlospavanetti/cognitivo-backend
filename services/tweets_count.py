@@ -7,8 +7,14 @@ class TweetsCount():
         self._api = api or client()
 
     def value(self):
-        queries = [self._query]
+        queries = [self.__limited_name(), self.__app_suffixed()]
         return sum([self.__count(query) for query in queries])
+
+    def __limited_name(self, word_count=4):
+        return ' '.join(self._query.split()[:word_count])
+
+    def __app_suffixed(self):
+        return self.__limited_name(2) + ' app'
 
     def __count(self, query):
         count, max_id = self.__partial(query)
@@ -34,15 +40,9 @@ class TweetsCount():
             return [count, max_id]
 
 
-def preprocessed_name(name):
-    # clean_name = re.sub(r'(-|–|&|,|!|and|by)', '', name)
-    limited_name = ' '.join(name.split()[:4])
-    return limited_name
-
-
 def with_tweets_citations_count(frame):
     api = client()
-    count = [TweetsCount(preprocessed_name(row.track_name), api=api).value()
+    count = [TweetsCount(row.track_name, api=api).value()
              for _, row in frame.iterrows()]
     enriched = frame.assign(n_citacoes=count)
     return enriched
