@@ -1,6 +1,9 @@
+import os
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
 
-engine = create_engine('sqlite:///output/database.db')
+load_dotenv()
+engine = create_engine(os.environ['DATABASE_URL'])
 
 
 def save_dataframe(frame, table, timestamp):
