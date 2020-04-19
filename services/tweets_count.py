@@ -1,4 +1,4 @@
-from services.twitter import client
+from services.twitter import client, ApiError
 
 
 class TweetsCount():
@@ -6,19 +6,27 @@ class TweetsCount():
         self._query = query
         self._api = api or client()
 
-    def value(self, max_id=None):
+    def value(self):
+        count, max_id = self.__partial(self._query)
+        while max_id:
+            delta, max_id = self.__partial(self._query, max_id=max_id)
+            count += delta
+        return count
+
+    def __partial(self, query, max_id=None):
         count = 0
         try:
             while True:
                 new_tweets = self._api.search(
-                    q=self._query, max_id=max_id, count=100)
+                    q=query, max_id=max_id, count=100)
 
                 if not new_tweets:
                     break
                 count += len(new_tweets)
                 max_id = new_tweets[-1].id - 1
-            return count
-        except Exception:
+            return [count, None]
+        except ApiError:
+            print('Timeout exception')
             return [count, max_id]
 
 

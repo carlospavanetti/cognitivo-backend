@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from tweepy import API, AppAuthHandler
+from tweepy import API, AppAuthHandler, TweepError
 
 
 def client():
@@ -17,3 +17,6 @@ def client():
     if not api:
         raise Exception('Could not authenticate')
     return api
+
+
+ApiError = TweepError
