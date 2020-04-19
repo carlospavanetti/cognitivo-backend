@@ -6,18 +6,20 @@ class TweetsCount():
         self._query = query
         self._api = api or client()
 
-    def value(self):
+    def value(self, max_id=None):
         count = 0
-        max_id = None
-        while True:
-            new_tweets = self._api.search(
-                q=self._query, max_id=max_id, count=100)
+        try:
+            while True:
+                new_tweets = self._api.search(
+                    q=self._query, max_id=max_id, count=100)
 
-            if not new_tweets:
-                break
-            count += len(new_tweets)
-            max_id = new_tweets[-1].id - 1
-        return count
+                if not new_tweets:
+                    break
+                count += len(new_tweets)
+                max_id = new_tweets[-1].id - 1
+            return count
+        except Exception:
+            return [count, max_id]
 
 
 def preprocessed_name(name):
