@@ -19,7 +19,9 @@ def top_book_and_music_apps(frame):
 
 data = pd.read_csv('data/AppleStore.csv')
 news = data[data.prime_genre == 'News']
-print(most_rated(news).track_name.values[0])
+target_api = most_rated(news).track_name.values[0]
+print('A API requisitada é a do seguinte app: {api}'.format(api=target_api))
+
 selected_apps = top_book_and_music_apps(data)
 enriched_data = with_tweets_citations_count(selected_apps)
 output_data = enriched_data[
