@@ -1,3 +1,5 @@
+# -*- coding: utf8 -*-
+
 from time import time
 import pandas as pd
 from services import database
