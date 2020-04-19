@@ -9,6 +9,6 @@ def create_app():
     app = Flask(__name__)
     app.config.from_mapping(
         SECRET_KEY=os.getenv('SECRET_KEY', 'dev'),
-        DATABASE_URL=os.environ['DATABASE_URL']
+        DATABASE_URI=os.environ['DATABASE_URI']
     )
     return app
